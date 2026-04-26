@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  remove-bg-store:
+    build: .
+    container_name: remove-bg-store-service
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./app/static/generated-assets:/service/app/static/generated-assets
+    restart: unless-stopped

@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+.env
+.pytest_cache/
+.mypy_cache/
+/test
+app/static/generated-assets/external-cutouts/*.png
