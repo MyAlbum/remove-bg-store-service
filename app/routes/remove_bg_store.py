@@ -144,8 +144,7 @@ async def remove_bg_store(body: RemoveBgStoreRequest, request: Request):
 
     directory = ensure_external_cutout_dir()
     absolute_path = Path(directory) / file_name
-    if not absolute_path.exists():
-        absolute_path.write_bytes(png_bytes)
+    absolute_path.write_bytes(png_bytes)
 
     relative_url = f"/generated-assets/external-cutouts/{file_name}"
     url = f"{_public_base_url(request)}{relative_url}"

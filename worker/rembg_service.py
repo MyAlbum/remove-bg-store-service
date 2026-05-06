@@ -27,7 +27,7 @@ import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, JSONResponse
-from PIL import Image, ImageFilter
+from PIL import Image, ImageFilter, ImageOps
 from pydantic import BaseModel
 import onnxruntime as ort
 from rembg import new_session, remove
@@ -154,6 +154,12 @@ _ben2: object | None = None
 _rmbg2: dict | None = None
 _onnx_providers_override: list[str] | None = None
 _onnx_cpu_only_models: set[str] = set()
+
+
+def _open_image_with_exif_orientation(data: bytes, mode: str) -> Image.Image:
+    image = Image.open(io.BytesIO(data))
+    image = ImageOps.exif_transpose(image)
+    return image.convert(mode)
 
 
 def _get_preferred_providers(model_name: str | None = None) -> list[str]:
@@ -603,7 +609,7 @@ async def remove_background(body: RemoveBgRequest) -> Response:
         if t_wait > 0.1:
             print(f"[timing] queue wait: {t_wait:.2f}s")
         try:
-            input_image = Image.open(io.BytesIO(image_bytes)).convert("RGBA")
+            input_image = _open_image_with_exif_orientation(image_bytes, "RGBA")
             image_bytes = b""  # release raw bytes immediately
             infer_image = _resize_for_inference(input_image, resolved_for_resize)
             if infer_image is not input_image:
@@ -854,7 +860,7 @@ async def inpaint_background(body: InpaintRequest) -> Response:
         if t_wait > 0.1:
             print(f"[inpaint timing] queue wait: {t_wait:.2f}s")
         try:
-            source_image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
+            source_image = _open_image_with_exif_orientation(image_bytes, "RGB")
             image_bytes = b""
 
             # Resize for inference
