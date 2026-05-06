@@ -1,0 +1,7 @@
+.PHONY: app worker
+
+app:
+	uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+worker:
+	python worker/rembg_service.py
