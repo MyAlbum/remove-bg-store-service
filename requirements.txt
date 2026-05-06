@@ -1,5 +1,45 @@
+# Image generation service dependencies
+diffusers>=0.30.0
+transformers>=4.40.0
+accelerate>=0.30.0
+peft>=0.7.0
+safetensors>=0.4.0
+httpx>=0.27.0
+# Install CUDA drivers:
+# https://developer.nvidia.com/cuda-downloads?target_os=Windows&target_arch=x86_64&target_version=11&target_type=exe_local
+#
+# Install (CPU):
+#   pip install -r requirements.txt
+#
+# Install (NVIDIA GPU - RTX 50 series and newer):
+#   pip install -r requirements.txt
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128
+#   pip install onnxruntime-gpu
+#
+# Install (NVIDIA GPU - older RTX/ GTX series):
+#   pip install -r requirements.txt
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+#   pip install onnxruntime-gpu
+#
+# Install (AMD/Intel GPU on Windows):
+#   pip install -r requirements.txt
+#   pip install onnxruntime-directml --no-deps
+#
+# Then run:
+#   python birefnet_service.py
+
 fastapi>=0.111.0
 uvicorn[standard]>=0.29.0
 httpx>=0.27.0
 Pillow>=9.5.0,<10.0.0
 numpy>=1.21.6,<2.0
+#rembg>=2.0.57,<2.0.70
+rembg[gpu]>=2.0.57,<2.0.70
+# onnxruntime>=1.18.0
+onnxruntime-directml>=1.18.0
+pymatting>=1.1.12
+simple-lama-inpainting>=0.1.2
+ben2 @ git+https://github.com/PramaLLC/BEN2.git
+torch>=2.11.0  # For RTX 50 series (sm_120) support with CUDA 12.8
+torchvision>=0.21.0
+kornia>=0.7.3

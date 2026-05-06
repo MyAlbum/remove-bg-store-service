@@ -13,6 +13,9 @@ The Next.js app talks to this via REMOVE_BG_PROVIDER=local in your .env.local.
 Set REMOVE_BG_LOCAL_URL=http://127.0.0.1:7860 (or omit; that's the default).
 """
 
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning, module="timm")
+
 import asyncio
 import gc
 import io

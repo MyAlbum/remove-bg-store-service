@@ -88,6 +88,10 @@ async def remove_bg_store(body: RemoveBgStoreRequest, request: Request):
                 },
             )
     except httpx.RequestError as exc:
+        print(
+            "[remove-bg-store] upstream request error "
+            f"url={REMOVE_BG_LOCAL_URL}/remove-bg error={exc}"
+        )
         raise HTTPException(
             status_code=502,
             detail=(
@@ -97,6 +101,10 @@ async def remove_bg_store(body: RemoveBgStoreRequest, request: Request):
         ) from exc
 
     if upstream_res.status_code >= 400:
+        print(
+            "[remove-bg-store] upstream returned error "
+            f"status={upstream_res.status_code} body={upstream_res.text[:500]}"
+        )
         raise HTTPException(
             status_code=502,
             detail=f"Local remove-bg service error: {upstream_res.text}",
@@ -105,6 +113,10 @@ async def remove_bg_store(body: RemoveBgStoreRequest, request: Request):
     content_type = upstream_res.headers.get("content-type", "")
     if "image/png" not in content_type:
         detail = upstream_res.text
+        print(
+            "[remove-bg-store] upstream returned unexpected content type "
+            f"content_type={content_type} body={detail[:500]}"
+        )
         raise HTTPException(
             status_code=502,
             detail=detail or f"Unexpected response content type from local remove-bg service: {content_type}",
